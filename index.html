@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="outline">
+    <div class="head-panel">
+      <div class="hr-display">
+        12
+      </div>
+      <div class="head-panel-placeholder">
+        :
+      </div>
+      <div class="minute-display">
+        00
+      </div>
+      <div class="AM-PM-switch">
+        <div class="am">
+          AM
+        </div>
+        <br>
+        <div class="pm">
+          PM
+        </div>
+      </div>
+    </div>
+    <div class="clock-face">
+      <div class="num-wrap hour-div" style="">
+      </div>
+      <div class="num-wrap minute-div" style="display:none">
+      </div>
+    </div>
+  </div>
+  <div class="result-panel">
+  </div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+// initialize clock face : hour
+for (var i = 1; i <= 12; i++) {
+  $(".hour-div").append("<div class=\"hr-item\"><span class=\"num minute\">"+i+"</span></div>");
+}
+
+//initialize clock face: minute
+for (var i = 1; i <= 60; i++) {
+  if (i%5 == 0) {
+    $(".minute-div").append("<div class=\"hr-item\"><span class=\"num hr\">"+i+"</span></div>");
+  }else{
+    $(".minute-div").append("<div class=\"hr-item\"><span class=\"num hr small-font\">"+i+"</span></div>");
+  }
+}
+
+//////////////////////////////////////////////
+
+var items = $(".hr-item");
+for (var i = 0; i < items.length; i++) {
+  var elem = items.eq(i).find(".num");
+  var val = parseInt(elem.html());
+  if (elem.hasClass("hr")) {
+    val = val / 5;
+  }
+  var ratio = val / 12.0;
+  var radian = ratio * 2 * Math.PI;
+  var radius = 160;
+  var vertical = -radius * Math.cos(radian);
+  var horizontal = radius * Math.sin(radian);
+  items.eq(i).css({"left":horizontal + "px","top":vertical + "px"});
+}
+
+var hh, mm, am_pm_value;
+
+$(".minute-display").on("click", function(){
+  $(this).css("color", "black");
+  $(".hr-display").css("color", "grey");
+  $(".hour-div").hide();
+  $(".minute-div").show();
+});
+
+$(".hr-display").on("click", function(){
+  $(this).css("color", "black");
+  $(".minute-display").css("color", "grey");
+  $(".minute-div").hide();
+  $(".hour-div").show();
+});
+
+$(".num").on("click", function(){
+  if ($(this).hasClass("minute")) {
+    hh = $(this).html();
+    hh = hh <= 9 ? "0"+hh : hh;
+    $(".hr-display").html(hh);
+  }else if ($(this).hasClass("hr")){
+    mm = $(this).html();
+    mm = mm <= 9 ? "0"+mm : mm;
+    $(".minute-display").html(mm);
+  }
+});
+
+$(".am").on("click", function(){
+  //reassign values
+  mm = mm == undefined ? "00" : mm;
+  hh = hh == undefined ? "00" : hh;
+  am_pm_value = $(this).html();
+
+  //change the css
+  $(this).css("color", "black");
+  $(".pm").css("color", "grey");
+
+  //change the text
+  $(".result-panel").html("Selected time is " + hh + " : " + mm + " " + am_pm_value);
+
+  // change the head panel value
+  $(".hr-display").html(hh);
+  $(".minute-display").html(mm);
+});
+
+$(".pm").on("click", function(){
+  //reassign values
+  mm = mm == undefined ? "12" : mm;
+  hh = hh == undefined ? "00" : hh;
+  am_pm_value = $(this).html();
+
+  //change the css
+  $(this).css("color", "black");
+  $(".am").css("color", "grey");
+
+  //change the text
+  $(".result-panel").html("Selected time is " + hh + " : " + mm + " " + am_pm_value);
+
+  // change the head panel value
+  $(".hr-display").html(hh);
+  $(".minute-display").html(mm);
+});
+
+
+</script>
